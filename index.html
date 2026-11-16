@@ -13,8 +13,10 @@ button:hover{background:#2ea043}
 .lang-btn{position:absolute;top:15px;left:15px;background:#30363d;padding:5px 10px;font-size:12px;margin:0}
 #results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto;border:1px solid #30363d}
 canvas{background:#0d1117;border-radius:8px;margin-top:15px;width:100%;border:1px solid #30363d}
-.theory-box{margin-top:20px;text-align:right;background:#0d1117;padding:15px;border-radius:5px;font-family:Arial;border:1px solid #30363d}
-html[dir="ltr"] .theory-box { text-align: left; }
+.theory-box, details{margin-top:20px;text-align:right;background:#0d1117;padding:15px;border-radius:5px;font-family:Arial;border:1px solid #30363d;line-height:1.6}
+html[dir="ltr"] .theory-box, html[dir="ltr"] details { text-align: left; }
+summary{cursor:pointer;color:#58a6ff;font-weight:bold;font-size:1.1em;outline:none}
+.wp-section{margin-top:12px;border-top:1px solid #21262d;padding-top:10px}
 </style>
 </head>
 <body>
@@ -41,6 +43,26 @@ html[dir="ltr"] .theory-box { text-align: left; }
 <p id="t-p4">4. الكثافة: كلما كبرت القمة n، يزداد عدد الجسور وتتناقص الكثافة بنمط لوغاريتمي.</p>
 </div>
 
+<details>
+<summary id="wp-summary">📄 الورقة البحثية: تشريح الجسور الأولية (اضغط للقراءة)</summary>
+<div class="wp-section">
+<h4 style="color:#58a6ff;margin:5px 0" id="wp-s1-t">1. المقدمة</h4>
+<p id="wp-s1-b">لغة هرم H هي إطار رياضي بنائي صُمم لدراسة توزيع الأعداد الأولية دون افتراض اللانهاية الفعلية. يتحدد الواقع الرياضي حصرياً بالقمة الحالية (n) التي تم الوصول إليها وبناؤها.</p>
+</div>
+<div class="wp-section">
+<h4 style="color:#58a6ff;margin:5px 0" id="wp-s2-t">2. التعريفات الرياضية</h4>
+<p id="wp-s2-b">البناء التراكمي: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. الجسر الأولي: يشكل الزوج المتماثل (n-d, n+d) جسراً إذا كان كلاهما عدداً أولياً.</p>
+</div>
+<div class="wp-section">
+<h4 style="color:#58a6ff;margin:5px 0" id="wp-s3-t">3. النتائج التجريبية والكثافة</h4>
+<p id="wp-s3-b">ترتفع الجسور من 2 عند H_10 إلى 70,730 جسراً عند H_10,000,000، بينما تنخفض الكثافة (Bridges / n) بسلاسة من 20% إلى 0.70% وفق نمط لوغاريتمي منتظم.</p>
+</div>
+<div class="wp-section">
+<h4 style="color:#58a6ff;margin:5px 0" id="wp-s4-t">4. الخلاصة</h4>
+<p id="wp-s4-b">توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية دون الاعتماد على اللانهايات المكتملة.</p>
+</div>
+</details>
+
 <p style="font-size:12px;color:#8b949e;margin-top:20px">Fadwa (2026) - Pyramid H Language</p>
 </div>
 
@@ -59,4 +81,175 @@ const translations = {
         theoryTitle: "نظرية لغة هرم",
         p1: "1. البناء: H_{n+1} = H_n ∪ {n+1}",
         p2: "2. اللانهاية الكامنة: ماكيناش لانهاية فعلية، كاينا غير القمة اللي وصلنا ليها دابا.",
-        p3: "3.
+        p3: "3. الجسر: (n-d) و (n+d) بجوج أوليين.",
+        p4: "4. الكثافة: كلما كبرت القمة n، يزداد عدد الجسور وتتناقص الكثافة بنمط لوغاريتمي.",
+        wpSummary: "📄 الورقة البحثية: تشريح الجسور الأولية (اضغط للقراءة)",
+        wpS1T: "1. المقدمة",
+        wpS1B: "لغة هرم H هي إطار رياضي بنائي صُمم لدراسة توزيع الأعداد الأولية دون افتراض اللانهاية الفعلية. يتحدد الواقع الرياضي حصرياً بالقمة الحالية (n) التي تم الوصول إليها وبناؤها.",
+        wpS2T: "2. التعريفات الرياضية",
+        wpS2B: "البناء التراكمي: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. الجسر الأولي: يشكل الزوج المتماثل (n-d, n+d) جسراً إذا كان كلاهما عدداً أولياً.",
+        wpS3T: "3. النتائج التجريبية والكثافة",
+        wpS3B: "ترتفع الجسور من 2 عند H_10 إلى 70,730 جسراً عند H_10,000,000، بينما تنخفض الكثافة (Bridges / n) بسلاسة من 20% إلى 0.70% وفق نمط لوغاريتمي منتظم.",
+        wpS4T: "4. الخلاصة",
+        wpS4B: "توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية دون الاعتماد على اللانهايات المكتملة."
+    },
+    en: {
+        dir: "ltr",
+        langBtn: "العربية",
+        title: "Pyramid H Language",
+        subtitle: "Pyramid H Language:",
+        desc: "A constructive framework for studying primes without actual infinity.",
+        inputLabel: "Enter Pyramid Apex (n):",
+        btnText: "Run Simulation",
+        defaultRes: "Click the button to show results...",
+        chartTitle: "Bridge Growth vs Pyramid Apex",
+        theoryTitle: "Pyramid H Theory",
+        p1: "1. Construction: H_{n+1} = H_n ∪ {n+1}",
+        p2: "2. Potential Infinity: No actual infinity, only the reached apex.",
+        p3: "3. Bridge: Both (n-d) and (n+d) are prime.",
+        p4: "4. Density: As apex n grows, bridges increase while density decays logarithmically.",
+        wpSummary: "📄 Whitepaper: The Anatomy of Prime Bridges (Click to read)",
+        wpS1T: "1. Introduction",
+        wpS1B: "Pyramid H is a constructive mathematical framework designed to investigate prime number distributions without assuming actual infinity. Mathematical reality is strictly bounded by the current apex (n) reached.",
+        wpS2T: "2. Formal Definitions",
+        wpS2B: "Constructive build: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. Prime Bridge: A symmetric pair (n-d, n+d) forms a bridge if and only if both are prime.",
+        wpS3T: "3. Empirical Results & Density",
+        wpS3B: "Bridges grow from 2 at H_10 to 70,730 at H_10,000,000, while density (Bridges / n) smoothly decays from 20% to 0.70% following a logarithmic-like pattern.",
+        wpS4T: "4. Conclusion",
+        wpS4B: "Pyramid H provides a finite, constructive, and computationally testable foundation to study prime symmetry without relying on completed infinities."
+    }
+};
+
+let currentLang = 'ar';
+
+function toggleLanguage() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    const t = translations[currentLang];
+    
+    document.getElementById('htmlRoot').setAttribute('dir', t.dir);
+    document.getElementById('langBtn').innerText = t.langBtn;
+    document.getElementById('t-title').innerText = t.title;
+    document.getElementById('t-subtitle').innerText = t.subtitle;
+    document.getElementById('t-desc').innerText = t.desc;
+    document.getElementById('t-input-label').innerText = t.inputLabel;
+    document.getElementById('t-btn').innerText = t.btnText;
+    document.getElementById('t-chart-title').innerText = t.chartTitle;
+    document.getElementById('t-theory-title').innerText = t.theoryTitle;
+    document.getElementById('t-p1').innerText = t.p1;
+    document.getElementById('t-p2').innerText = t.p2;
+    document.getElementById('t-p3').innerText = t.p3;
+    document.getElementById('t-p4').innerText = t.p4;
+    document.getElementById('wp-summary').innerText = t.wpSummary;
+    document.getElementById('wp-s1-t').innerText = t.wpS1T;
+    document.getElementById('wp-s1-b').innerText = t.wpS1B;
+    document.getElementById('wp-s2-t').innerText = t.wpS2T;
+    document.getElementById('wp-s2-b').innerText = t.wpS2B;
+    document.getElementById('wp-s3-t').innerText = t.wpS3T;
+    document.getElementById('wp-s3-b').innerText = t.wpS3B;
+    document.getElementById('wp-s4-t').innerText = t.wpS4T;
+    document.getElementById('wp-s4-b').innerText = t.wpS4B;
+    
+    if(document.getElementById('results').innerText.includes("اضغط") || document.getElementById('results').innerText.includes("Click")) {
+        document.getElementById('results').innerText = t.defaultRes;
+    }
+}
+
+function isPrime(num) {
+    if (num < 2) return false;
+    if (num === 2) return true;
+    if (num % 2 === 0) return false;
+    for (let i = 3; i <= Math.sqrt(num); i += 2) {
+        if (num % i === 0) return false;
+    }
+    return true;
+}
+
+function runSimulation() {
+    const n = parseInt(document.getElementById('apexInput').value);
+    if (isNaN(n) || n < 2) {
+        alert(currentLang === 'ar' ? 'المرجو إدخال عدد صحيح أكبر من أو يساوي 2' : 'Please enter an integer >= 2');
+        return;
+    }
+
+    let bridges = [];
+    for (let d = 0; d < n; d++) {
+        let p1 = n - d;
+        let p2 = n + d;
+        if (isPrime(p1) && isPrime(p2)) {
+            bridges.push({ d, p1, p2 });
+        }
+    }
+
+    let density = ((bridges.length / n) * 100).toFixed(2);
+    let resDiv = document.getElementById('results');
+    
+    let output = currentLang === 'ar' 
+        ? `H_${n}: ${bridges.length} جسر | الكثافة (Density): ${density}%\n\n`
+        : `H_${n}: ${bridges.length} bridges | Density: ${density}%\n\n`;
+    
+    let displayBridges = bridges.length > 15 ? bridges.slice(0, 15) : bridges;
+    displayBridges.forEach(b => {
+        output += `d=${b.d} -> (${b.p1}, ${b.p2})\n`;
+    });
+    
+    if (bridges.length > 15) {
+        output += `\n... (${currentLang === 'ar' ? 'تم إخفاء الباقي، الإجمالي' : 'hidden, total'}: ${bridges.length})`;
+    }
+    
+    resDiv.innerText = output;
+}
+
+window.onload = function() {
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    const data = [
+        { n: 10, bridges: 2 },
+        { n: 100, bridges: 8 },
+        { n: 1000, bridges: 37 },
+        { n: 5000, bridges: 127 },
+        { n: 10000, bridges: 231 }
+    ];
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let padding = 40;
+    let width = canvas.width - padding * 2;
+    let height = canvas.height - padding * 2;
+    let maxBridges = 250;
+
+    ctx.strokeStyle = '#30363d';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padding, padding);
+    ctx.lineTo(padding, canvas.height - padding);
+    ctx.lineTo(canvas.width - padding, canvas.height - padding);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#58a6ff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    data.forEach((item, index) => {
+        let x = padding + (index / (data.length - 1)) * width;
+        let y = (canvas.height - padding) - (item.bridges / maxBridges) * height;
+        
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+
+        ctx.save();
+        ctx.fillStyle = '#58a6ff';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.fillStyle = '#8b949e';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(`H_${item.n}`, x, canvas.height - padding + 15);
+        ctx.fillText(item.bridges, x, y - 10);
+    });
+    ctx.stroke();
+};
+</script>
+</body>
+</html>
