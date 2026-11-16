@@ -11,7 +11,7 @@ h1{color:#58a6ff}
 button{background:#238636;color:white;border:none;padding:10px 20px;font-size:16px;border-radius:5px;cursor:pointer;margin-top:15px}
 button:hover{background:#2ea043}
 .lang-btn{position:absolute;top:15px;left:15px;background:#30363d;padding:5px 10px;font-size:12px;margin:0}
-#results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto}
+#results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto;border:1px solid #30363d}
 canvas{background:#0d1117;border-radius:8px;margin-top:15px;width:100%;border:1px solid #30363d}
 .theory-box{margin-top:20px;text-align:right;background:#0d1117;padding:15px;border-radius:5px;font-family:Arial;border:1px solid #30363d}
 html[dir="ltr"] .theory-box { text-align: left; }
@@ -25,7 +25,7 @@ html[dir="ltr"] .theory-box { text-align: left; }
 <p><strong id="t-subtitle">لغة هرم H:</strong> <span id="t-desc">إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.</span></p>
 
 <p id="t-input-label">أدخل قمة الهرم (n):</p>
-<input type="number" id="apexInput" value="100" min="2" max="10000" style="padding:8px;font-size:16px;width:100px;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center">
+<input type="number" id="apexInput" value="100" min="2" max="10000000" style="padding:8px;font-size:16px;width:120px;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center">
 <br>
 <button onclick="runSimulation()" id="t-btn">شغل الهرم</button>
 <div id="results" style="text-align: left;" dir="ltr">اضغط على الزر لعرض النتائج...</div>
@@ -35,10 +35,10 @@ html[dir="ltr"] .theory-box { text-align: left; }
 
 <div class="theory-box">
 <h3 style="color:#58a6ff;margin-top:0" id="t-theory-title">نظرية لغة هرم</h3>
-<p id="t-p1">1. البناء: $H_{n+1} = H_n \cup \{n+1\}$</p>
+<p id="t-p1">1. البناء: H_{n+1} = H_n ∪ {n+1}</p>
 <p id="t-p2">2. اللانهاية الكامنة: ماكيناش لانهاية فعلية، كاينا غير القمة اللي وصلنا ليها دابا.</p>
-<p id="t-p3">3. الجسر: $(n-d)$ و $(n+d)$ بجوج أوليين.</p>
-<p id="t-p4">مثال: $n=10$ ، $d=3 \rightarrow (7,13)$</p>
+<p id="t-p3">3. الجسر: (n-d) و (n+d) بجوج أوليين.</p>
+<p id="t-p4">4. الكثافة: كلما كبرت القمة n، يزداد عدد الجسور وتتناقص الكثافة بنمط لوغاريتمي.</p>
 </div>
 
 <p style="font-size:12px;color:#8b949e;margin-top:20px">Fadwa (2026) - Pyramid H Language</p>
@@ -59,144 +59,4 @@ const translations = {
         theoryTitle: "نظرية لغة هرم",
         p1: "1. البناء: H_{n+1} = H_n ∪ {n+1}",
         p2: "2. اللانهاية الكامنة: ماكيناش لانهاية فعلية، كاينا غير القمة اللي وصلنا ليها دابا.",
-        p3: "3. الجسر: (n-d) و (n+d) بجوج أوليين.",
-        p4: "مثال: n=10 ، d=3 -> (7,13)"
-    },
-    en: {
-        dir: "ltr",
-        langBtn: "العربية",
-        title: "Pyramid H Language",
-        subtitle: "Pyramid H Language:",
-        desc: "A constructive framework for studying primes without actual infinity.",
-        inputLabel: "Enter Pyramid Apex (n):",
-        btnText: "Run Simulation",
-        defaultRes: "Click the button to show results...",
-        chartTitle: "Bridge Growth vs Pyramid Apex",
-        theoryTitle: "Pyramid H Theory",
-        p1: "1. Construction: H_{n+1} = H_n ∪ {n+1}",
-        p2: "2. Potential Infinity: No actual infinity, only the reached apex.",
-        p3: "3. Bridge: Both (n-d) and (n+d) are prime.",
-        p4: "Example: n=10 , d=3 -> (7,13)"
-    }
-};
-
-let currentLang = 'ar';
-
-function toggleLanguage() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    const t = translations[currentLang];
-    
-    document.getElementById('htmlRoot').setAttribute('dir', t.dir);
-    document.getElementById('langBtn').innerText = t.langBtn;
-    document.getElementById('t-title').innerText = t.title;
-    document.getElementById('t-subtitle').innerText = t.subtitle;
-    document.getElementById('t-desc').innerText = t.desc;
-    document.getElementById('t-input-label').innerText = t.inputLabel;
-    document.getElementById('t-btn').innerText = t.btnText;
-    document.getElementById('t-chart-title').innerText = t.chartTitle;
-    document.getElementById('t-theory-title').innerText = t.theoryTitle;
-    document.getElementById('t-p1').innerText = t.p1;
-    document.getElementById('t-p2').innerText = t.p2;
-    document.getElementById('t-p3').innerText = t.p3;
-    document.getElementById('t-p4').innerText = t.p4;
-    
-    if(document.getElementById('results').innerText.includes("اضغط") || document.getElementById('results').innerText.includes("Click")) {
-        document.getElementById('results').innerText = t.defaultRes;
-    }
-}
-
-function isPrime(num) {
-    if (num < 2) return false;
-    if (num === 2) return true;
-    if (num % 2 === 0) return false;
-    for (let i = 3; i <= Math.sqrt(num); i += 2) {
-        if (num % i === 0) return false;
-    }
-    return true;
-}
-
-function runSimulation() {
-    const n = parseInt(document.getElementById('apexInput').value);
-    if (isNaN(n) || n < 2) {
-        alert(currentLang === 'ar' ? 'المرجو إدخال عدد صحيح أكبر من أو يساوي 2' : 'Please enter an integer >= 2');
-        return;
-    }
-
-    let bridges = [];
-    for (let d = 0; d < n; d++) {
-        let p1 = n - d;
-        let p2 = n + d;
-        if (isPrime(p1) && isPrime(p2)) {
-            bridges.push({ d, p1, p2 });
-        }
-    }
-
-    let resDiv = document.getElementById('results');
-    let output = `H_${n}: ${bridges.length} ${currentLang === 'ar' ? 'جسر' : 'bridges'}\n\n`;
-    
-    let displayBridges = bridges.length > 15 ? bridges.slice(0, 15) : bridges;
-    displayBridges.forEach(b => {
-        output += `d=${b.d} -> (${b.p1}, ${b.p2})\n`;
-    });
-    
-    if (bridges.length > 15) {
-        output += `\n... (${currentLang === 'ar' ? 'تم إخفاء الباقي، الإجمالي' : 'hidden, total'}: ${bridges.length})`;
-    }
-    
-    resDiv.innerText = output;
-}
-
-window.onload = function() {
-    const canvas = document.getElementById('chart');
-    const ctx = canvas.getContext('2d');
-    const data = [
-        { n: 10, bridges: 2 },
-        { n: 100, bridges: 8 },
-        { n: 1000, bridges: 37 },
-        { n: 5000, bridges: 127 },
-        { n: 10000, bridges: 231 }
-    ];
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let padding = 40;
-    let width = canvas.width - padding * 2;
-    let height = canvas.height - padding * 2;
-    let maxBridges = 250;
-
-    ctx.strokeStyle = '#30363d';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(padding, padding);
-    ctx.lineTo(padding, canvas.height - padding);
-    ctx.lineTo(canvas.width - padding, canvas.height - padding);
-    ctx.stroke();
-
-    ctx.strokeStyle = '#58a6ff';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-
-    data.forEach((item, index) => {
-        let x = padding + (index / (data.length - 1)) * width;
-        let y = (canvas.height - padding) - (item.bridges / maxBridges) * height;
-        
-        if (index === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-
-        ctx.save();
-        ctx.fillStyle = '#58a6ff';
-        ctx.beginPath();
-        ctx.arc(x, y, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        ctx.fillStyle = '#8b949e';
-        ctx.font = '10px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText(`H_${item.n}`, x, canvas.height - padding + 15);
-        ctx.fillText(item.bridges, x, y - 10);
-    });
-    ctx.stroke();
-};
-</script>
-</body>
-</html>
+        p3: "3.
