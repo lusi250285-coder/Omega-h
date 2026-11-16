@@ -1,14 +1,23 @@
-## Extended Empirical Results
+# Pyramid H Language
 
-| n | Bridges | Smallest d | Largest d |
-| --- | --- | --- | --- |
-| 10 | 2 | d=3 -> (7,13) | d=7 -> (3,17) |
-| 100 | 8 | d=3 -> (97,103) | d=97 -> (3,197) |
-| 1000 | 37 | d=9 -> (991,1009) | d=997 -> (3,1997) |
-| 5000 | 127 | d=81 -> (4919,5081) | d=4941 -> (59,9941) |
-| 10000 | 231 | d=69 -> (9931,10069) | d=9997 -> (3,19997) |
+A constructive framework for studying primes without actual infinity. Developed by **Fadwa (2026)**.
 
-Observation:
-- عدد الجسور كيكبر كلما كبرت قمة الهرم n
-- أصغر d كيبقى صغير، يعني كاين ديما جسر قريب من القمة
-- أكبر d كيقرب من n، يعني كاين جسر كيوصل لـ (3, 2n-3)
+## Overview
+Pyramid H Language explores the distribution and behavior of prime bridges $(n-d, n+d)$ across expanding pyramid apexes $n$.
+
+## Density Analysis
+
+| n | Bridges | Density (Bridges / n) |
+| --- | --- | --- |
+| 10 | 2 | 20% |
+| 100 | 8 | 8% |
+| 1000 | 37 | 3.7% |
+| 5000 | 127 | 2.54% |
+| 10000 | 231 | 2.31% |
+| 10000000 | 70730 | 0.70% |
+
+**Observation:** Total bridges grow, but density decreases, following a logarithmic-like pattern. Small $d$ bridges remain present at every scale.
+
+## Files
+- `index.html`: Interactive bilingual web interface (Arabic / English) with dynamic charts.
+- `pyramid_h_advanced.py`: Advanced mathematical simulation engine.
