@@ -1,62 +1,48 @@
-"""
-Pyramid H Language - Advanced Algorithmic Simulation
-Author: Fadwa (2026)
-Description: High-performance simulation to compute prime symmetry bridges 
-across large computational horizons (e.g., H_10000 and beyond).
-"""
-
-import math
-import time
-
-def is_prime(num: int) -> bool:
-    """التحقق السريع من الأعداد الأولية"""
-    if num < 2:
-        return False
-    if num == 2:
-        return True
-    if num % 2 == 0:
-        return False
-    for i in range(3, int(math.isqrt(num)) + 1, 2):
-        if num % i == 0:
-            return False
-    return True
-
-def analyze_pyramid_horizon(target_n: int):
-    """
-    تحليل الهرم عند قمة ضخمة واستخراج إحصائيات الجسور
-    """
-    print(f"\n========================================")
-    print(f"[*] جاري معالجة الهرم عند القمة H_{target_n}...")
-    print(f"========================================")
-    
-    start_time = time.time()
-    bridges = []
-    
-    # حساب الجسور
-    for d in range(0, target_n):
-        p1 = target_n - d
-        p2 = target_n + d
-        if is_prime(p1) and is_prime(p2):
-            bridges.append((d, p1, p2))
-            
-    end_time = time.time()
-    duration = end_time - start_time
-    
-    # عرض النتائج والتحليلات
-    print(f"[✓] تم الانتهاء في {duration:.4f} ثانية.")
-    print(f"-> إجمالي الجسور الحية النشطة: {len(bridges)}")
-    
-    if bridges:
-        smallest = bridges[0]
-        largest = bridges[-1]
-        print(f"-> أصغر جسر: d = {smallest[0]}  ==> ({smallest[1]}, {smallest[2]})")
-        print(f"-> أكبر جسر:  d = {largest[0]}  ==> ({largest[1]}, {largest[2]})")
-    else:
-        print("-> لم يتم العثور على جسور في هذا النطاق.")
-
-if __name__ == "__main__":
-    # تجربة نطاقات مختلفة ومتدرجة بدقة
-    horizons = [100, 1000, 5000, 10000]
-    
-    for h in horizons:
-        analyze_pyramid_horizon(h)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyramid H Language</title>
+<style>
+body{font-family:Arial;background:#0d1117;color:#c9d1d9;text-align:center;padding:20px}
+.container{max-width:600px;margin:auto;background:#161b22;padding:20px;border-radius:10px}
+h1{color:#58a6ff}
+button{background:#238636;color:white;border:none;padding:10px 20px;font-size:16px;border-radius:5px;cursor:pointer;margin-top:15px}
+#results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Pyramid H Language</h1>
+<p><strong>لغة هرم H:</strong> إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.</p>
+<p>أدخل قمة الهرم (n):</p>
+<input type="number" id="apexInput" value="10" min="2" max="1000" style="padding:8px;font-size:16px;width:80px">
+<br>
+<button onclick="runSimulation()">شغل الهرم</button>
+<div id="results">اضغط على الزر لعرض النتائج...</div>
+<p style="font-size:12px;margin-top:15px">Fadwa (2026) - Pyramid H Language</p>
+</div>
+<script>
+function isPrime(num){
+if(num<2) return false;
+if(num===2) return true;
+if(num%2===0) return false;
+for(let i=3;i*i<=num;i+=2){ if(num%i===0) return false; }
+return true;
+}
+function runSimulation(){
+let n=parseInt(document.getElementById('apexInput').value);
+let bridges=[];
+for(let d=0; d<n; d++){
+let p1=n-d; let p2=n+d;
+if(isPrime(p1) && isPrime(p2)){ bridges.push({d:d,p1:p1,p2:p2}); }
+}
+let html="<b>H_"+n+": "+bridges.length+" bridges</b><br><br>";
+bridges.forEach(b=>{ html+="d="+b.d+" -> ("+b.p1+","+b.p2+")<br>"; });
+if(bridges.length===0) html+="No bridges found";
+document.getElementById('results').innerHTML=html;
+}
+</script>
+</body>
+</html>
