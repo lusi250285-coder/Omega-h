@@ -10,6 +10,7 @@ body{font-family:Arial;background:#0d1117;color:#c9d1d9;text-align:center;paddin
 h1{color:#58a6ff}
 button{background:#238636;color:white;border:none;padding:10px 20px;font-size:16px;border-radius:5px;cursor:pointer;margin-top:15px}
 button:hover{background:#2ea043}
+button:disabled{background:#30363d;color:#8b949e;cursor:not-allowed}
 .lang-btn{position:absolute;top:15px;left:15px;background:#30363d;padding:5px 10px;font-size:12px;margin:0}
 #results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto;border:1px solid #30363d}
 canvas{background:#0d1117;border-radius:8px;margin-top:15px;width:100%;border:1px solid #30363d}
@@ -17,6 +18,10 @@ canvas{background:#0d1117;border-radius:8px;margin-top:15px;width:100%;border:1p
 html[dir="ltr"] .theory-box, html[dir="ltr"] details { text-align: left; }
 summary{cursor:pointer;color:#58a6ff;font-weight:bold;font-size:1.1em;outline:none}
 .wp-section{margin-top:12px;border-top:1px solid #21262d;padding-top:10px}
+/* Progress Bar Styles */
+#progress-container{width:100%;background:#30363d;border-radius:5px;margin-top:15px;display:none;overflow:hidden;height:12px}
+#progress-bar{width:0%;height:100%;background:#238636;transition:width 0.2s}
+#progress-text{font-size:12px;color:#8b949e;margin-top:5px}
 </style>
 </head>
 <body>
@@ -27,9 +32,15 @@ summary{cursor:pointer;color:#58a6ff;font-weight:bold;font-size:1.1em;outline:no
 <p><strong id="t-subtitle">لغة هرم H:</strong> <span id="t-desc">إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.</span></p>
 
 <p id="t-input-label">أدخل قمة الهرم (n):</p>
-<input type="number" id="apexInput" value="100" min="2" max="10000000" style="padding:8px;font-size:16px;width:120px;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center">
+<input type="number" id="apexInput" value="100000" min="2" max="10000000" style="padding:8px;font-size:16px;width:140px;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center">
 <br>
 <button onclick="runSimulation()" id="t-btn">شغل الهرم</button>
+
+<div id="progress-container">
+  <div id="progress-bar"></div>
+</div>
+<div id="progress-text"></div>
+
 <div id="results" style="text-align: left;" dir="ltr">اضغط على الزر لعرض النتائج...</div>
 
 <h3 style="color:#58a6ff;margin-top:25px" id="t-chart-title">تطور عدد الجسور مع قمة الهرم</h3>
@@ -91,7 +102,9 @@ const translations = {
         wpS3T: "3. النتائج التجريبية والكثافة",
         wpS3B: "ترتفع الجسور من 2 عند H_10 إلى 70,730 جسراً عند H_10,000,000، بينما تنخفض الكثافة (Bridges / n) بسلاسة من 20% إلى 0.70% وفق نمط لوغاريتمي منتظم.",
         wpS4T: "4. الخلاصة",
-        wpS4B: "توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية دون الاعتماد على اللانهايات المكتملة."
+        wpS4B: "توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية دون الاعتماد على اللانهايات المكتملة.",
+        calculating: "جاري الحساب في الخلفية...",
+        done: "تم الحساب بنجاح!"
     },
     en: {
         dir: "ltr",
@@ -116,7 +129,9 @@ const translations = {
         wpS3T: "3. Empirical Results & Density",
         wpS3B: "Bridges grow from 2 at H_10 to 70,730 at H_10,000,000, while density (Bridges / n) smoothly decays from 20% to 0.70% following a logarithmic-like pattern.",
         wpS4T: "4. Conclusion",
-        wpS4B: "Pyramid H provides a finite, constructive, and computationally testable foundation to study prime symmetry without relying on completed infinities."
+        wpS4B: "Pyramid H provides a finite, constructive, and computationally testable foundation to study prime symmetry without relying on completed infinities.",
+        calculating: "Calculating in background...",
+        done: "Calculation completed successfully!"
     }
 };
 
@@ -154,16 +169,6 @@ function toggleLanguage() {
     }
 }
 
-function isPrime(num) {
-    if (num < 2) return false;
-    if (num === 2) return true;
-    if (num % 2 === 0) return false;
-    for (let i = 3; i <= Math.sqrt(num); i += 2) {
-        if (num % i === 0) return false;
-    }
-    return true;
-}
-
 function runSimulation() {
     const n = parseInt(document.getElementById('apexInput').value);
     if (isNaN(n) || n < 2) {
@@ -171,32 +176,83 @@ function runSimulation() {
         return;
     }
 
-    let bridges = [];
-    for (let d = 0; d < n; d++) {
-        let p1 = n - d;
-        let p2 = n + d;
-        if (isPrime(p1) && isPrime(p2)) {
-            bridges.push({ d, p1, p2 });
-        }
-    }
+    const btn = document.getElementById('t-btn');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const resDiv = document.getElementById('results');
 
-    let density = ((bridges.length / n) * 100).toFixed(2);
-    let resDiv = document.getElementById('results');
-    
-    let output = currentLang === 'ar' 
-        ? `H_${n}: ${bridges.length} جسر | الكثافة (Density): ${density}%\n\n`
-        : `H_${n}: ${bridges.length} bridges | Density: ${density}%\n\n`;
-    
-    let displayBridges = bridges.length > 15 ? bridges.slice(0, 15) : bridges;
-    displayBridges.forEach(b => {
-        output += `d=${b.d} -> (${b.p1}, ${b.p2})\n`;
-    });
-    
-    if (bridges.length > 15) {
-        output += `\n... (${currentLang === 'ar' ? 'تم إخفاء الباقي، الإجمالي' : 'hidden, total'}: ${bridges.length})`;
-    }
-    
-    resDiv.innerText = output;
+    btn.disabled = true;
+    progressContainer.style.display = 'block';
+    progressBar.style.width = '10%';
+    progressText.innerText = translations[currentLang].calculating;
+    resDiv.innerText = "...";
+
+    // إنشاء Web Worker بطريقة Blob لتفادي الحاجة لملف خارجي إضافي
+    const workerCode = `
+        function isPrime(num) {
+            if (num < 2) return false;
+            if (num === 2) return true;
+            if (num % 2 === 0) return false;
+            for (let i = 3; i <= Math.sqrt(num); i += 2) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+
+        self.onmessage = function(e) {
+            const n = e.data;
+            let bridges = [];
+            let step = Math.max(1, Math.floor(n / 10));
+
+            for (let d = 0; d < n; d++) {
+                let p1 = n - d;
+                let p2 = n + d;
+                if (isPrime(p1) && isPrime(p2)) {
+                    bridges.push({ d, p1, p2 });
+                }
+                if (d % step === 0) {
+                    let percent = Math.floor((d / n) * 90);
+                    self.postMessage({ type: 'progress', percent: percent });
+                }
+            }
+            self.postMessage({ type: 'done', bridges: bridges });
+        };
+    `;
+
+    const blob = new Blob([workerCode], { type: 'application/javascript' });
+    const worker = new Worker(URL.createObjectURL(blob));
+
+    worker.onmessage = function(e) {
+        if (e.data.type === 'progress') {
+            progressBar.style.width = e.data.percent + '%';
+        } else if (e.data.type === 'done') {
+            progressBar.style.width = '100%';
+            progressText.innerText = translations[currentLang].done;
+            
+            const bridges = e.data.bridges;
+            let density = ((bridges.length / n) * 100).toFixed(2);
+            
+            let output = currentLang === 'ar' 
+                ? `H_${n}: ${bridges.length} جسر | الكثافة (Density): ${density}%\n\n`
+                : `H_${n}: ${bridges.length} bridges | Density: ${density}%\n\n`;
+            
+            let displayBridges = bridges.length > 15 ? bridges.slice(0, 15) : bridges;
+            displayBridges.forEach(b => {
+                output += `d=${b.d} -> (${b.p1}, ${b.p2})\n`;
+            });
+            
+            if (bridges.length > 15) {
+                output += `\n... (${currentLang === 'ar' ? 'تم إخفاء الباقي، الإجمالي' : 'hidden, total'}: ${bridges.length})`;
+            }
+            
+            resDiv.innerText = output;
+            btn.disabled = false;
+            worker.terminate();
+        }
+    };
+
+    worker.postMessage(n);
 }
 
 window.onload = function() {
