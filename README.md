@@ -1,21 +1,14 @@
-# Pyramid H Language - لغة هرم H
+## Extended Empirical Results
 
-Conceptual & Constructive Framework for studying primes.
+| n | Bridges | Smallest d | Largest d |
+| --- | --- | --- | --- |
+| 10 | 2 | d=3 -> (7,13) | d=7 -> (3,17) |
+| 100 | 8 | d=3 -> (97,103) | d=97 -> (3,197) |
+| 1000 | 37 | d=9 -> (991,1009) | d=997 -> (3,1997) |
+| 5000 | 127 | d=81 -> (4919,5081) | d=4941 -> (59,9941) |
+| 10000 | 231 | d=69 -> (9931,10069) | d=9997 -> (3,19997) |
 
-Live Demo: https://lusi250285-coder.github.io/Omega-h/
-
-## Idea
-No actual infinity. Pyramid H grows step by step.
-
-## Bridge Metric
-For n, bridge d, 0 <= d < n, (n-d) and (n+d) prime.
-
-## Empirical Results
-- H_10: 2 bridges
-- H_100: 8 bridges
-- H_1000: 37 bridges
-- H_5000: 127 bridges
-- H_10000: 231 bridges
-
-## Author
-Fadwa (2026)
+Observation:
+- عدد الجسور كيكبر كلما كبرت قمة الهرم n
+- أصغر d كيبقى صغير، يعني كاين ديما جسر قريب من القمة
+- أكبر d كيقرب من n، يعني كاين جسر كيوصل لـ (3, 2n-3)
