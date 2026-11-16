@@ -21,3 +21,4 @@ Pyramid H Language explores the distribution and behavior of prime bridges $(n-d
 ## Files
 - `index.html`: Interactive bilingual web interface (Arabic / English) with dynamic charts.
 - `pyramid_h_advanced.py`: Advanced mathematical simulation engine.
+- H_50000000 -> 291,400 bridges, Density 0.58%
