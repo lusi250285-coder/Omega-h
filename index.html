@@ -6,10 +6,12 @@
 <title>Pyramid H Language</title>
 <style>
 body{font-family:Arial;background:#0d1117;color:#c9d1d9;text-align:center;padding:20px}
-.container{max-width:600px;margin:auto;background:#161b22;padding:20px;border-radius:10px}
+.container{max-width:650px;margin:auto;background:#161b22;padding:20px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
 h1{color:#58a6ff}
 button{background:#238636;color:white;border:none;padding:10px 20px;font-size:16px;border-radius:5px;cursor:pointer;margin-top:15px}
-#results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace}
+button:hover{background:#2ea043}
+#results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto}
+canvas{background:#0d1117;border-radius:8px;margin-top:15px;width:100%;border:1px solid #30363d}
 </style>
 </head>
 <body>
@@ -17,32 +19,121 @@ button{background:#238636;color:white;border:none;padding:10px 20px;font-size:16
 <h1>Pyramid H Language</h1>
 <p><strong>لغة هرم H:</strong> إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.</p>
 <p>أدخل قمة الهرم (n):</p>
-<input type="number" id="apexInput" value="10" min="2" max="1000" style="padding:8px;font-size:16px;width:80px">
+<input type="number" id="apexInput" value="100" min="2" max="10000" style="padding:8px;font-size:16px;width:100px;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center">
 <br>
 <button onclick="runSimulation()">شغل الهرم</button>
 <div id="results">اضغط على الزر لعرض النتائج...</div>
-<p style="font-size:12px;margin-top:15px">Fadwa (2026) - Pyramid H Language</p>
+
+<h3 style="color:#58a6ff;margin-top:25px">تطور عدد الجسور مع قمة الهرم</h3>
+<canvas id="chart" width="600" height="300"></canvas>
+<p style="font-size:12px;color:#8b949e">Fadwa (2026) - Pyramid H Language</p>
 </div>
+
 <script>
-function isPrime(num){
-if(num<2) return false;
-if(num===2) return true;
-if(num%2===0) return false;
-for(let i=3;i*i<=num;i+=2){ if(num%i===0) return false; }
-return true;
+function isPrime(num) {
+    if (num < 2) return false;
+    if (num === 2) return true;
+    if (num % 2 === 0) return false;
+    for (let i = 3; i <= Math.sqrt(num); i += 2) {
+        if (num % i === 0) return false;
+    }
+    return true;
 }
-function runSimulation(){
-let n=parseInt(document.getElementById('apexInput').value);
-let bridges=[];
-for(let d=0; d<n; d++){
-let p1=n-d; let p2=n+d;
-if(isPrime(p1) && isPrime(p2)){ bridges.push({d:d,p1:p1,p2:p2}); }
+
+function runSimulation() {
+    const n = parseInt(document.getElementById('apexInput').value);
+    if (isNaN(n) || n < 2) {
+        alert('المرجو إدخال عدد صحيح أكبر من أو يساوي 2');
+        return;
+    }
+
+    let bridges = [];
+    for (let d = 0; d < n; d++) {
+        let p1 = n - d;
+        let p2 = n + d;
+        if (isPrime(p1) && isPrime(p2)) {
+            bridges.push({ d, p1, p2 });
+        }
+    }
+
+    let resDiv = document.getElementById('results');
+    let output = `H_${n}: ${bridges.length} bridges\n\n`;
+    
+    // عرض عينة من الجسور لتفادي ملء الشاشة إذا كان العدد كبيراً
+    let displayBridges = bridges.length > 15 ? bridges.slice(0, 15) : bridges;
+    displayBridges.forEach(b => {
+        output += `d=${b.d} -> (${b.p1}, ${b.p2})\n`;
+    });
+    
+    if (bridges.length > 15) {
+        output += `\n... (تم إخفاء بقية الجسور للاختصار، الإجمالي: ${bridges.length})`;
+    }
+    
+    resDiv.innerText = output;
 }
-let html="<b>H_"+n+": "+bridges.length+" bridges</b><br><br>";
-bridges.forEach(b=>{ html+="d="+b.d+" -> ("+b.p1+","+b.p2+")<br>"; });
-if(bridges.length===0) html+="No bridges found";
-document.getElementById('results').innerHTML=html;
-}
+
+// رسم البيان التجريبي التبادلي بناءً على النتائج الموثقة
+window.onload = function() {
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    
+    // البيانات الموثقة للنطاقات
+    const data = [
+        { n: 10, bridges: 2 },
+        { n: 100, bridges: 8 },
+        { n: 1000, bridges: 37 },
+        { n: 5000, bridges: 127 },
+        { n: 10000, bridges: 231 }
+    ];
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    let padding = 40;
+    let width = canvas.width - padding * 2;
+    let height = canvas.height - padding * 2;
+    
+    let maxBridges = 250; // سقف الرسم البياني
+    
+    // رسم المحاور
+    ctx.strokeStyle = '#30363d';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padding, padding);
+    ctx.lineTo(padding, canvas.height - padding);
+    ctx.lineTo(canvas.width - padding, canvas.height - padding);
+    ctx.stroke();
+
+    // رسم النقاط والخطوط البيانية
+    ctx.strokeStyle = '#58a6ff';
+    ctx.fillStyle = '#238636';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    data.forEach((item, index) => {
+        let x = padding + (index / (data.length - 1)) * width;
+        let y = (canvas.height - padding) - (item.bridges / maxBridges) * height;
+        
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+
+        // رسم الدوائر عند كل نقطة قمة
+        ctx.save();
+        ctx.fillStyle = '#58a6ff';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // كتابة نص النطاق أسفل المحور
+        ctx.fillStyle = '#8b949e';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(`H_${item.n}`, x, canvas.height - padding + 15);
+        ctx.fillText(item.bridges, x, y - 10);
+    });
+    
+    ctx.stroke();
+};
 </script>
 </body>
 </html>
