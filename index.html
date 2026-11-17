@@ -11,16 +11,19 @@ h1{color:#58a6ff}
 button{background:#238636;color:white;border:none;padding:10px 20px;font-size:16px;border-radius:5px;cursor:pointer;margin-top:15px}
 button:hover{background:#2ea043}
 button:disabled{background:#30363d;color:#8b949e;cursor:not-allowed}
+.export-btn{background:#1f6feb;margin-right:5px}
+.export-btn:hover{background:#388bfd}
 .lang-btn{position:absolute;top:15px;left:15px;background:#30363d;padding:5px 10px;font-size:12px;margin:0}
-#results{margin-top:20px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto;border:1px solid #30363d}
+#results,#goldbachResults,#twinResults{margin-top:15px;text-align:left;background:#0d1117;padding:15px;border-radius:5px;font-family:monospace;white-space:pre-wrap;max-height:250px;overflow-y:auto;border:1px solid #30363d}
 canvas{background:#0d1117;border-radius:8px;margin-top:15px;width:100%;border:1px solid #30363d}
-.theory-box, details, .why-box{margin-top:20px;text-align:right;background:#0d1117;padding:15px;border-radius:5px;font-family:Arial;border:1px solid #30363d;line-height:1.6}
-html[dir="ltr"] .theory-box, html[dir="ltr"] details, html[dir="ltr"] .why-box{text-align:left}
+.theory-box, details, .why-box, .tool-box{margin-top:20px;text-align:right;background:#0d1117;padding:15px;border-radius:5px;font-family:Arial;border:1px solid #30363d;line-height:1.6}
+html[dir="ltr"] .theory-box, html[dir="ltr"] details, html[dir="ltr"] .why-box, html[dir="ltr"] .tool-box{text-align:left}
 summary{cursor:pointer;color:#58a6ff;font-weight:bold;font-size:1.1em;outline:none}
 .wp-section{margin-top:12px;border-top:1px solid #21262d;padding-top:10px}
 #progress-container{width:100%;background:#30363d;border-radius:5px;margin-top:15px;display:none;overflow:hidden;height:12px}
 #progress-bar{width:0%;height:100%;background:#238636;transition:width 0.2s}
 #progress-text{font-size:12px;color:#8b949e;margin-top:5px}
+input{background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center;padding:8px;font-size:16px;width:140px}
 </style>
 </head>
 <body>
@@ -29,17 +32,44 @@ summary{cursor:pointer;color:#58a6ff;font-weight:bold;font-size:1.1em;outline:no
 <h1 id="t-title">Pyramid H Language</h1>
 <p><strong id="t-subtitle">لغة هرم H:</strong> <span id="t-desc">إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.</span></p>
 <p id="t-input-label">أدخل قمة الهرم (n):</p>
-<input type="number" id="apexInput" value="100" min="2" max="10000000" style="padding:8px;font-size:16px;width:140px;background:#0d1117;color:#c9d1d9;border:1px solid #30363d;border-radius:4px;text-align:center">
+<input type="number" id="apexInput" value="100" min="2" max="10000000">
 <br>
 <button onclick="runSimulation()" id="t-btn">شغل الهرم</button>
 <div id="progress-container"><div id="progress-bar"></div></div>
 <div id="progress-text"></div>
 <div id="results" style="text-align:left" dir="ltr">اضغط على الزر لعرض النتائج...</div>
+<button onclick="exportBridgesCSV()" class="export-btn" id="t-export-btn" style="display:none">📥 تحميل النتائج (CSV)</button>
+
 <h3 style="color:#58a6ff;margin-top:25px" id="t-chart-title">تطور عدد الجسور مع قمة الهرم</h3>
 <canvas id="chart" width="600" height="300"></canvas>
 <h3 style="color:#58a6ff;margin-top:25px" id="t-density-title">منحنى الكثافة - Density Curve</h3>
 <canvas id="densityChart" width="600" height="300"></canvas>
 <p style="font-size:12px;color:#8b949e">Density = Bridges / n : 20% → 0.58%</p>
+
+<div class="tool-box">
+<h3 style="color:#58a6ff;text-align:center">Goldbach Test / اختبار غولدباخ</h3>
+<p style="font-size:13px">كل جسر (n-d, n+d) هو تفكيك غولدباخ: (n-d)+(n+d)=2n</p>
+<p style="font-size:13px;text-align:left"><i>Every bridge (n-d, n+d) is a Goldbach partition: (n-d)+(n+d)=2n</i></p>
+<p>أدخل عدد زوجي:</p>
+<input type="number" id="goldbachInput" value="100" min="4" max="100000" step="2">
+<br>
+<button onclick="runGoldbach()">فحص غولدباخ / Check Goldbach</button>
+<div id="goldbachResults" dir="ltr">...</div>
+<button onclick="exportGoldbachCSV()" class="export-btn" id="t-export-gb" style="display:none">📥 تحميل تفكيكات غولدباخ (CSV)</button>
+</div>
+
+<div class="tool-box">
+<h3 style="color:#58a6ff;text-align:center">Twin Primes Explorer / مستكشف التوائم</h3>
+<p style="font-size:13px">التوائم (p, p+2) هي أصغر جسر بـ d=1</p>
+<p style="font-size:13px;text-align:left"><i>Twins (p, p+2) are the smallest bridge with d=1</i></p>
+<p>أدخل القمة n:</p>
+<input type="number" id="twinInput" value="100" min="3" max="100000">
+<br>
+<button onclick="runTwin()">ابحث عن التوائم / Find Twins</button>
+<div id="twinResults" dir="ltr">...</div>
+<button onclick="exportTwinCSV()" class="export-btn" id="t-export-tw" style="display:none">📥 تحميل التوائم (CSV)</button>
+</div>
+
 <div class="theory-box">
 <h3 style="color:#58a6ff;margin-top:0" id="t-theory-title">نظرية لغة هرم</h3>
 <p id="t-p1">1. البناء: H_{n+1} = H_n ∪ {n+1}</p>
@@ -58,19 +88,23 @@ summary{cursor:pointer;color:#58a6ff;font-weight:bold;font-size:1.1em;outline:no
 </div>
 <details>
 <summary id="wp-summary">📄 الورقة البحثية: تشريح الجسور الأولية (اضغط للقراءة)</summary>
-<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s1-t">1. المقدمة</h4><p id="wp-s1-b">لغة هرم H هي إطار رياضي بنائي صُمم لدراسة توزيع الأعداد الأولية دون افتراض اللانهاية الفعلية. يتحدد الواقع الرياضي حصرياً بالقمة الحالية (n) التي تم الوصول إليها وبناؤها.</p></div>
-<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s2-t">2. التعريفات الرياضية</h4><p id="wp-s2-b">البناء التراكمي: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. الجسر الأولي: يشكل الزوج المتماثل (n-d, n+d) جسراً إذا كان كلاهما عدداً أولياً.</p></div>
-<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s3-t">3. النتائج التجريبية والكثافة</h4><p id="wp-s3-b">ترتفع الجسور من 2 عند H_10 إلى 70,730 جسراً عند H_10,000,000، بينما تنخفض الكثافة (Bridges / n) بسلاسة من 20% إلى 0.70% وفق نمط لوغاريتمي منتظم. وعند H_50,000,000: 291,400 جسراً، كثافة 0.58%.</p></div>
-<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s4-t">4. الخلاصة</h4><p id="wp-s4-b">توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية دون الاعتماد على اللانهايات المكتملة.</p></div>
+<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s1-t">1. المقدمة</h4><p id="wp-s1-b">لغة هرم H هي إطار رياضي بنائي صُمم لدراسة توزيع الأعداد الأولية دون افتراض اللانهاية الفعلية.</p></div>
+<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s2-t">2. التعريفات الرياضية</h4><p id="wp-s2-b">البناء: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. الجسر: (n-d, n+d) بجوج أوليين. و (n-d)+(n+d)=2n هو تفكيك غولدباخ.</p></div>
+<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s3-t">3. النتائج التجريبية والكثافة</h4><p id="wp-s3-b">ترتفع الجسور من 2 عند H_10 إلى 70,730 عند H_10,000,000، و 291,400 عند H_50,000,000. الكثافة تنخفض من 20% إلى 0.58%.</p></div>
+<div class="wp-section"><h4 style="color:#58a6ff;margin:5px 0" id="wp-s4-t">4. الخلاصة</h4><p id="wp-s4-b">توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية و غولدباخ و التوائم.</p></div>
 </details>
 <p style="font-size:12px;color:#8b949e;margin-top:20px">Fadwa (2026) - Pyramid H Language</p>
 </div>
 <script>
 const translations = {
-  ar: {dir:"rtl",langBtn:"English",title:"Pyramid H Language",subtitle:"لغة هرم H:",desc:"إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.",inputLabel:"أدخل قمة الهرم (n):",btnText:"شغل الهرم",defaultRes:"اضغط على الزر لعرض النتائج...",chartTitle:"تطور عدد الجسور مع قمة الهرم",densityTitle:"منحنى الكثافة - Density Curve",theoryTitle:"نظرية لغة هرم",p1:"1. البناء: H_{n+1} = H_n ∪ {n+1}",p2:"2. اللانهاية الكامنة: ماكيناش لانهاية فعلية، كاينا غير القمة اللي وصلنا ليها دابا.",p3:"3. الجسر: (n-d) و (n+d) بجوج أوليين.",p4:"4. الكثافة: كلما كبرت القمة n، يزداد عدد الجسور وتتناقص الكثافة بنمط لوغاريتمي.",wpSummary:"📄 الورقة البحثية: تشريح الجسور الأولية (اضغط للقراءة)",wpS1T:"1. المقدمة",wpS1B:"لغة هرم H هي إطار رياضي بنائي صُمم لدراسة توزيع الأعداد الأولية دون افتراض اللانهاية الفعلية. يتحدد الواقع الرياضي حصرياً بالقمة الحالية (n) التي تم الوصول إليها وبناؤها.",wpS2T:"2. التعريفات الرياضية",wpS2B:"البناء التراكمي: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. الجسر الأولي: يشكل الزوج المتماثل (n-d, n+d) جسراً إذا كان كلاهما عدداً أولياً.",wpS3T:"3. النتائج التجريبية والكثافة",wpS3B:"ترتفع الجسور من 2 عند H_10 إلى 70,730 جسراً عند H_10,000,000، بينما تنخفض الكثافة (Bridges / n) بسلاسة من 20% إلى 0.70% وفق نمط لوغاريتمي منتظم. وعند H_50,000,000: 291,400 جسراً، كثافة 0.58%.",wpS4T:"4. الخلاصة",wpS4B:"توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية دون الاعتماد على اللانهايات المكتملة.",calculating:"جاري الحساب في الخلفية...",done:"تم الحساب بنجاح!"},
-  en: {dir:"ltr",langBtn:"العربية",title:"Pyramid H Language",subtitle:"Pyramid H Language:",desc:"A constructive framework for studying primes without actual infinity.",inputLabel:"Enter Pyramid Apex (n):",btnText:"Run Simulation",defaultRes:"Click the button to show results...",chartTitle:"Bridge Growth vs Pyramid Apex",densityTitle:"Density Curve - منحنى الكثافة",theoryTitle:"Pyramid H Theory",p1:"1. Construction: H_{n+1} = H_n ∪ {n+1}",p2:"2. Potential Infinity: No actual infinity, only the reached apex.",p3:"3. Bridge: Both (n-d) and (n+d) are prime.",p4:"4. Density: As apex n grows, bridges increase while density decays logarithmically.",wpSummary:"📄 Whitepaper: The Anatomy of Prime Bridges (Click to read)",wpS1T:"1. Introduction",wpS1B:"Pyramid H is a constructive mathematical framework designed to investigate prime number distributions without assuming actual infinity. Mathematical reality is strictly bounded by the current apex (n) reached.",wpS2T:"2. Formal Definitions",wpS2B:"Constructive build: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. Prime Bridge: A symmetric pair (n-d, n+d) forms a bridge if and only if both are prime.",wpS3T:"3. Empirical Results & Density",wpS3B:"Bridges grow from 2 at H_10 to 70,730 at H_10,000,000, while density (Bridges / n) smoothly decays from 20% to 0.70% following a logarithmic-like pattern. At H_50,000,000: 291,400 bridges, density 0.58%.",wpS4T:"4. Conclusion",wpS4B:"Pyramid H provides a finite, constructive, and computationally testable foundation to study prime symmetry without relying on completed infinities.",calculating:"Calculating in background...",done:"Calculation completed successfully!"}
+  ar: {dir:"rtl",langBtn:"English",title:"Pyramid H Language",subtitle:"لغة هرم H:",desc:"إطار بنائي لدراسة الأعداد الأولية بلا لانهاية فعلية.",inputLabel:"أدخل قمة الهرم (n):",btnText:"شغل الهرم",defaultRes:"اضغط على الزر لعرض النتائج...",chartTitle:"تطور عدد الجسور مع قمة الهرم",densityTitle:"منحنى الكثافة - Density Curve",theoryTitle:"نظرية لغة هرم",p1:"1. البناء: H_{n+1} = H_n ∪ {n+1}",p2:"2. اللانهاية الكامنة: ماكيناش لانهاية فعلية، كاينا غير القمة اللي وصلنا ليها دابا.",p3:"3. الجسر: (n-d) و (n+d) بجوج أوليين.",p4:"4. الكثافة: كلما كبرت القمة n، يزداد عدد الجسور وتتناقص الكثافة بنمط لوغاريتمي.",wpSummary:"📄 الورقة البحثية: تشريح الجسور الأولية (اضغط للقراءة)",wpS1T:"1. المقدمة",wpS1B:"لغة هرم H هي إطار رياضي بنائي صُمم لدراسة توزيع الأعداد الأولية دون افتراض اللانهاية الفعلية.",wpS2T:"2. التعريفات الرياضية",wpS2B:"البناء: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. الجسر: (n-d, n+d) بجوج أوليين. و (n-d)+(n+d)=2n هو تفكيك غولدباخ.",wpS3T:"3. النتائج التجريبية والكثافة",wpS3B:"ترتفع الجسور من 2 عند H_10 إلى 70,730 عند H_10,000,000، و 291,400 عند H_50,000,000. الكثافة تنخفض من 20% إلى 0.58%.",wpS4T:"4. الخلاصة",wpS4B:"توفر لغة هرم H أساساً منتهياً وبنائياً وقابلاً للاختبار الحسابي لدراسة تماثل الأعداد الأولية و غولدباخ و التوائم.",calculating:"جاري الحساب في الخلفية...",done:"تم الحساب بنجاح!",exportBridges:"📥 تحميل النتائج (CSV)",exportGb:"📥 تحميل تفكيكات غولدباخ (CSV)",exportTw:"📥 تحميل التوائم (CSV)"},
+  en: {dir:"ltr",langBtn:"العربية",title:"Pyramid H Language",subtitle:"Pyramid H Language:",desc:"A constructive framework for studying primes without actual infinity.",inputLabel:"Enter Pyramid Apex (n):",btnText:"Run Simulation",defaultRes:"Click the button to show results...",chartTitle:"Bridge Growth vs Pyramid Apex",densityTitle:"Density Curve - منحنى الكثافة",theoryTitle:"Pyramid H Theory",p1:"1. Construction: H_{n+1} = H_n ∪ {n+1}",p2:"2. Potential Infinity: No actual infinity, only the reached apex.",p3:"3. Bridge: Both (n-d) and (n+d) are prime.",p4:"4. Density: As apex n grows, bridges increase while density decays logarithmically.",wpSummary:"📄 Whitepaper: The Anatomy of Prime Bridges (Click to read)",wpS1T:"1. Introduction",wpS1B:"Pyramid H is a constructive mathematical framework designed to investigate prime number distributions without assuming actual infinity.",wpS2T:"2. Formal Definitions",wpS2B:"Build: H_0 = {1}, H_{n+1} = H_n ∪ {n+1}. Bridge: (n-d, n+d) both prime. And (n-d)+(n+d)=2n is a Goldbach partition.",wpS3T:"3. Empirical Results & Density",wpS3B:"Bridges grow from 2 at H_10 to 70,730 at H_10,000,000, and 291,400 at H_50,000,000. Density decays from 20% to 0.58%.",wpS4T:"4. Conclusion",wpS4B:"Pyramid H provides a finite, constructive, and computationally testable foundation to study prime symmetry, Goldbach and twins.",calculating:"Calculating in background...",done:"Calculation completed successfully!",exportBridges:"📥 Export Bridges (CSV)",exportGb:"📥 Export Goldbach Partitions (CSV)",exportTw:"📥 Export Twin Primes (CSV)"}
 };
 let currentLang='ar';
+let lastBridges = [];
+let lastGoldbach = [];
+let lastTwins = [];
+
 function toggleLanguage(){
   currentLang = currentLang==='ar' ? 'en' : 'ar';
   const t = translations[currentLang];
@@ -97,10 +131,98 @@ function toggleLanguage(){
   document.getElementById('wp-s3-b').innerText = t.wpS3B;
   document.getElementById('wp-s4-t').innerText = t.wpS4T;
   document.getElementById('wp-s4-b').innerText = t.wpS4B;
+  document.getElementById('t-export-btn').innerText = t.exportBridges;
+  document.getElementById('t-export-gb').innerText = t.exportGb;
+  document.getElementById('t-export-tw').innerText = t.exportTw;
   if(document.getElementById('results').innerText.includes("اضغط") || document.getElementById('results').innerText.includes("Click")){
     document.getElementById('results').innerText = t.defaultRes;
   }
 }
+
+function downloadCSV(filename, rows) {
+  let processRow = function (row) {
+    return row.map(val => `"${val}"`).join(',');
+  };
+  let csvFile = rows.map(processRow).join('\n');
+  let blob = new Blob(["\uFEFF" + csvFile], { type: 'text/csv;charset=utf-8;' });
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function exportBridgesCSV(){
+  if(!lastBridges.length) return;
+  let rows = [["Apex (n)", "Distance (d)", "Prime 1 (n-d)", "Prime 2 (n+d)"]];
+  let n = document.getElementById('apexInput').value;
+  lastBridges.forEach(b => rows.push([n, b.d, b.p1, b.p2]));
+  downloadCSV(`Pyramid_H_Apex_${n}_Bridges.csv`, rows);
+}
+
+function exportGoldbachCSV(){
+  if(!lastGoldbach.length) return;
+  let even = document.getElementById('goldbachInput').value;
+  let rows = [["Even Number", "Prime 1", "Prime 2"]];
+  lastGoldbach.forEach(p => rows.push([even, p[0], p[1]]));
+  downloadCSV(`Goldbach_${even}_Partitions.csv`, rows);
+}
+
+function exportTwinCSV(){
+  if(!lastTwins.length) return;
+  let n = document.getElementById('twinInput').value;
+  let rows = [["Limit (n)", "Twin Prime 1", "Twin Prime 2"]];
+  lastTwins.forEach(t => rows.push([n, t[0], t[1]]));
+  downloadCSV(`Twin_Primes_Below_${n}.csv`, rows);
+}
+
+function isPrimeMain(n){
+  if(n<2) return false;
+  if(n===2) return true;
+  if(n%2===0) return false;
+  for(let i=3;i*i<=n;i+=2){ if(n%i===0) return false; }
+  return true;
+}
+
+function runGoldbach(){
+  let even = parseInt(document.getElementById('goldbachInput').value);
+  let out = document.getElementById('goldbachResults');
+  let exportBtn = document.getElementById('t-export-gb');
+  if(isNaN(even) || even<4 || even%2!==0){ out.innerText = currentLang==='ar' ? 'دخلي عدد زوجي >= 4' : 'Enter an even number >= 4'; exportBtn.style.display='none'; return; }
+  if(even>100000){ out.innerText = currentLang==='ar' ? 'كبير بزاف، جربي 100000 أو أقل' : 'Too large, try 100000 or less'; exportBtn.style.display='none'; return; }
+  let parts=[];
+  for(let p=2;p<=even/2;p++){
+    if(isPrimeMain(p) && isPrimeMain(even-p)){ parts.push([p, even-p]); }
+  }
+  lastGoldbach = parts;
+  let txt = currentLang==='ar' ? `${even} = ${parts.length} طرق غولدباخ\n\n` : `${even} = ${parts.length} Goldbach partitions\n\n`;
+  parts.slice(0,15).forEach(pr=>{ txt+=`${pr[0]} + ${pr[1]} = ${even}\n`; });
+  if(parts.length>15) txt+=`\n... (تم إخفاء الباقي، الإجمالي: ${parts.length})`;
+  if(parts.length===0) txt+= currentLang==='ar' ? 'لا يوجد تفكيك' : 'No partition';
+  out.innerText = txt;
+  exportBtn.style.display = parts.length > 0 ? 'inline-block' : 'none';
+}
+
+function runTwin(){
+  let n = parseInt(document.getElementById('twinInput').value);
+  let out = document.getElementById('twinResults');
+  let exportBtn = document.getElementById('t-export-tw');
+  if(isNaN(n) || n<3){ out.innerText = currentLang==='ar' ? 'دخلي n >= 3' : 'Enter n >= 3'; exportBtn.style.display='none'; return; }
+  if(n>100000){ out.innerText = currentLang==='ar' ? 'كبير بزاف، جربي 100000 أو أقل' : 'Too large, try 100000 or less'; exportBtn.style.display='none'; return; }
+  let twins=[];
+  for(let p=2;p+2<=n;p++){
+    if(isPrimeMain(p) && isPrimeMain(p+2)){ twins.push([p,p+2]); }
+  }
+  lastTwins = twins;
+  let txt = currentLang==='ar' ? `تحت ${n}: ${twins.length} توأم\n\n` : `Below ${n}: ${twins.length} twins\n\n`;
+  twins.slice(0,15).forEach(t=>{ txt+=`(${t[0]}, ${t[1]})\n`; });
+  if(twins.length>15) txt+=`\n... (تم إخفاء الباقي، الإجمالي: ${twins.length})`;
+  out.innerText = txt;
+  exportBtn.style.display = twins.length > 0 ? 'inline-block' : 'none';
+}
+
 function runSimulation(){
   const n = parseInt(document.getElementById('apexInput').value);
   if(isNaN(n) || n < 2){
@@ -116,7 +238,9 @@ function runSimulation(){
   const progressBar = document.getElementById('progress-bar');
   const progressText = document.getElementById('progress-text');
   const resDiv = document.getElementById('results');
+  const exportBtn = document.getElementById('t-export-btn');
   btn.disabled = true;
+  exportBtn.style.display = 'none';
   progressContainer.style.display = 'block';
   progressBar.style.width = '10%';
   progressText.innerText = translations[currentLang].calculating;
@@ -149,6 +273,7 @@ function runSimulation(){
       progressBar.style.width='100%';
       progressText.innerText = translations[currentLang].done;
       const bridges = e.data.bridges;
+      lastBridges = bridges;
       let density = ((bridges.length / n)*100).toFixed(2);
       let output = currentLang==='ar' ? `H_${n}: ${bridges.length} جسر | الكثافة (Density): ${density}%\n\n` : `H_${n}: ${bridges.length} bridges | Density: ${density}%\n\n`;
       let displayBridges = bridges.length > 15 ? bridges.slice(0,15) : bridges;
@@ -156,11 +281,13 @@ function runSimulation(){
       if(bridges.length > 15){ output+=`\n... (${currentLang==='ar' ? 'تم إخفاء الباقي، الإجمالي' : 'hidden, total'}: ${bridges.length})`; }
       resDiv.innerText = output;
       btn.disabled = false;
+      exportBtn.style.display = bridges.length > 0 ? 'inline-block' : 'none';
       worker.terminate();
     }
   };
   worker.postMessage(n);
 }
+
 function drawChart(){
   const canvas = document.getElementById('chart');
   const ctx = canvas.getContext('2d');
@@ -181,6 +308,7 @@ function drawChart(){
   });
   ctx.stroke();
 }
+
 function drawDensity(){
   let c = document.getElementById('densityChart');
   if(!c) return;
